@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Química IFMG Congonhas - Mobile</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      line-height: 1.6;
+      padding: 10px;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 15px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    h1 {
+      color: #2c3e50;
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+    }
+    
+    .subtitle {
+      color: #7f8c8d;
+      font-size: 1rem;
+    }
+    
+    .instrucoes {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 15px;
+      border-radius: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      font-size: 0.9rem;
+    }
+    
+    .mobile-table-container {
+      overflow-x: auto;
+      margin-bottom: 15px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+    
+    th, td {
+      padding: 10px 8px;
+      text-align: center;
+      border: 1px solid #e0e0e0;
+      font-size: 0.85rem;
+    }
+    
+    th {
+      background: #3498db;
+      color: white;
+      font-weight: 600;
+      position: sticky;
+      left: 0;
+    }
+    
+    .bancada-header {
+      background: #2c3e50 !important;
+    }
+    
+    select {
+      width: 100%;
+      padding: 8px 5px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: white;
+      font-size: 0.8rem;
+    }
+    
+    .controles {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .btn {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .btn-verificar {
+      background: #2ecc71;
+      color: white;
+    }
+    
+    .btn-limpar {
+      background: #e74c3c;
+      color: white;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+    
+    .resultado {
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 15px;
+      font-size: 1rem;
+    }
+    
+    .correto {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .incorreto {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .pistas-container {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      margin-bottom: 15px;
+    }
+    
+    .pistas-toggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      background: #3498db;
+      color: white;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    
+    .pistas-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    
+    .pistas-content.aberto {
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    
+    .pistas-content ol {
+      padding-left: 20px;
+    }
+    
+    .pistas-content li {
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+    
+    .pista-destaque {
+      background: #fff3cd;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-weight: bold;
+    }
+    
+    /* Cores para as células de cor do béquer */
+    .cor-amarelo { background-color: #FFF9C4 !important; }
+    .cor-azul { background-color: #B3E5FC !important; }
+    .cor-vermelho { background-color: #FFCDD2 !important; }
+    .cor-branco { background-color: #FAFAFA !important; border: 1px solid #E0E0E0 !important; }
+    .cor-verde { background-color: #C8E6C9 !important; }
+    
+    /* Melhorias para mobile */
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .subtitle {
+        font-size: 0.9rem;
+      }
+      
+      th, td {
+        padding: 8px 5px;
+        font-size: 0.75rem;
+      }
+      
+      select {
+        padding: 6px 3px;
+        font-size: 0.75rem;
+      }
+      
+      .btn {
+        padding: 12px;
+        font-size: 0.9rem;
+      }
+    }
+    
+    /* Indicador de scroll para tabela */
+    .scroll-indicator {
+      text-align: center;
+      color: #7f8c8d;
+      font-size: 0.8rem;
+      margin-top: 5px;
+      display: none;
+    }
+    
+    @media (max-width: 768px) {
+      .scroll-indicator {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Química IFMG Congonhas</h1>
+      <p class="subtitle">Jogo de Lógica - Versão Mobile</p>
+    </header>
+    
+    <div class="instrucoes">
+      <p><strong>Instruções:</strong> Complete a tabela usando as pistas. Cada item só pode aparecer uma vez por coluna. Arraste horizontalmente para ver toda a tabela.</p>
+    </div>
+    
+    <div class="mobile-table-container">
+      <table id="tabela-jogo">
+        <!-- As linhas serão geradas pelo JavaScript -->
+      </table>
+    </div>
+    <div class="scroll-indicator">⇠ Arraste para os lados para ver mais ⇢</div>
+    
+    <div class="controles">
+      <button class="btn btn-verificar" onclick="verificar()">Verificar</button>
+      <button class="btn btn-limpar" onclick="limpar()">Limpar</button>
+    </div>
+    
+    <div id="resultado" class="resultado"></div>
+    
+    <div class="pistas-container">
+      <div class="pistas-toggle" onclick="togglePistas()">
+        <span>📋 Pistas do Jogo</span>
+        <span id="pistas-seta">▼</span>
+      </div>
+      <div class="pistas-content" id="pistas-content">
+        <ol>
+          <li><span class="pista-destaque">Lavoisier</span> trabalha exclusivamente na <span class="pista-destaque">bancada 3</span>.</li>
+          <li><span class="pista-destaque">Curie</span> ocupa uma das bancadas das pontas <span class="pista-destaque">(1 ou 5)</span>.</li>
+          <li><span class="pista-destaque">Franklin</span> está na ponta oposta à de Curie.</li>
+          <li>O béquer <span class="pista-destaque">azul</span> e o <span class="pista-destaque">Condensador</span> estão juntos na mesma bancada.</li>
+          <li>O <span class="pista-destaque">Condensador</span> está localizado especificamente na <span class="pista-destaque">bancada 2</span>.</li>
+          <li>O béquer <span class="pista-destaque">amarelo</span> está na bancada imediatamente anterior à do Condensador.</li>
+          <li>A experiência que mostra <span class="pista-destaque">liberação de bolhas</span> é feita com <span class="pista-destaque">HCl</span> e ocorre <span class="pista-destaque">à direita</span> da bancada que usa <span class="pista-destaque">Solução NaCl</span>.</li>
+          <li>O experimento do <span class="pista-destaque">Etanol</span> é realizado usando um <span class="pista-destaque">Agitador</span>.</li>
+          <li>O béquer <span class="pista-destaque">branco</span> pertence à bancada que utiliza <span class="pista-destaque">Espátula</span>.</li>
+          <li>A <span class="pista-destaque">Solução NaCl</span> resulta em formação de precipitado e está na bancada que usa <span class="pista-destaque">Bico Bunsen</span>.</li>
+          <li><span class="pista-destaque">Pauling</span> é o cientista que maneja a <span class="pista-destaque">Espátula</span>.</li>
+          <li>O <span class="pista-destaque">Etanol</span> é identificado pelo béquer <span class="pista-destaque">vermelho</span>.</li>
+          <li>O béquer <span class="pista-destaque">vermelho</span> está posicionado à esquerda do local onde ocorre <span class="pista-destaque">cristalização</span>.</li>
+          <li>O experimento com <span class="pista-destaque">Ácido acético</span> acontece à direita da bancada que usa <span class="pista-destaque">Agitador</span>.</li>
+          <li>A <span class="pista-destaque">Bureta</span> é utilizada na bancada vizinha à que tem o béquer <span class="pista-destaque">branco</span>.</li>
+          <li>O experimento que mostra <span class="pista-destaque">mudança de cor</span> ocorre <span class="pista-destaque">ao lado</span> do que apresenta <span class="pista-destaque">liberação de bolhas</span>.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const opcoes = {
+      cientistas: ["", "Marie Curie", "Dmitri Mendeleev", "Antoine Lavoisier", "Linus Pauling", "Rosalind Franklin"],
+      descobertas: ["", "Radioatividade", "Tabela Periódica", "Lei da Conservação das Massas", "Ligações Químicas", "Estrutura do DNA"],
+      cores: ["", "Amarelo", "Azul", "Vermelho", "Branco", "Verde"],
+      aparatos: ["", "Bico Bunsen", "Condensador", "Agitador", "Espátula", "Bureta"],
+      substancias: ["", "Água destilada", "HCl", "Etanol", "Solução NaCl", "Ácido acético"],
+      resultados: ["", "Aquecimento visível", "Liberação de bolhas", "Mudança de cor", "Formação de precipitado", "Cristalização"]
+    };
+
+    // GABARITO CORRIGIDO
+    const solucao = {
+      1: ["Marie Curie", "Radioatividade", "Amarelo", "Bico Bunsen", "Solução NaCl", "Formação de precipitado"],
+      2: ["Dmitri Mendeleev", "Tabela Periódica", "Azul", "Condensador", "HCl", "Liberação de bolhas"],
+      3: ["Antoine Lavoisier", "Lei da Conservação das Massas", "Vermelho", "Agitador", "Etanol", "Mudança de cor"],
+      4: ["Linus Pauling", "Ligações Químicas", "Branco", "Espátula", "Ácido acético", "Cristalização"],
+      5: ["Rosalind Franklin", "Estrutura do DNA", "Verde", "Bureta", "Água destilada", "Aquecimento visível"]
+    };
+
+    function criarTabela() {
+      const tabela = document.getElementById('tabela-jogo');
+      
+      let html = '<tr><th>Categoria</th>';
+      for (let i = 1; i <= 5; i++) {
+        html += `<th class="bancada-header">Bancada ${i}</th>`;
+      }
+      html += '</tr>';
+      
+      const categorias = [
+        { nome: 'Cientista', opcoes: opcoes.cientistas, chave: 'cientista' },
+        { nome: 'Descoberta', opcoes: opcoes.descobertas, chave: 'descoberta' },
+        { nome: 'Cor do Béquer', opcoes: opcoes.cores, chave: 'cor' },
+        { nome: 'Aparato', opcoes: opcoes.aparatos, chave: 'aparato' },
+        { nome: 'Substância', opcoes: opcoes.substancias, chave: 'substancia' },
+        { nome: 'Resultado', opcoes: opcoes.resultados, chave: 'resultado' }
+      ];
+      
+      categorias.forEach(categoria => {
+        html += `<tr><th>${categoria.nome}</th>`;
+        for (let bancada = 1; bancada <= 5; bancada++) {
+          if (categoria.chave === 'cor') {
+            html += `<td>${criarSelectComCor(`${categoria.chave}-${bancada}`, categoria.opcoes)}</td>`;
+          } else {
+            html += `<td>${criarSelect(`${categoria.chave}-${bancada}`, categoria.opcoes)}</td>`;
+          }
+        }
+        html += '</tr>';
+      });
+      
+      tabela.innerHTML = html;
+      adicionarEventosCor();
+    }
+
+    function criarSelect(nome, valores) {
+      let s = `<select name="${nome}">`;
+      for (let v of valores) {
+        s += `<option value="${v}">${v}</option>`;
+      }
+      s += `</select>`;
+      return s;
+    }
+
+    function criarSelectComCor(nome, valores) {
+      let s = `<select name="${nome}">`;
+      for (let v of valores) {
+        s += `<option value="${v}">${v}</option>`;
+      }
+      s += `</select>`;
+      return s;
+    }
+
+    function adicionarEventosCor() {
+      const selectsCor = document.querySelectorAll('select[name^="cor-"]');
+      selectsCor.forEach(select => {
+        select.addEventListener('change', function() {
+          atualizarCor(this);
+        });
+      });
+    }
+
+    function atualizarCor(selectElement) {
+      const valor = selectElement.value;
+      const celula = selectElement.parentElement;
+      
+      celula.classList.remove('cor-amarelo', 'cor-azul', 'cor-vermelho', 'cor-branco', 'cor-verde');
+      
+      switch(valor) {
+        case 'Amarelo':
+          celula.classList.add('cor-amarelo');
+          break;
+        case 'Azul':
+          celula.classList.add('cor-azul');
+          break;
+        case 'Vermelho':
+          celula.classList.add('cor-vermelho');
+          break;
+        case 'Branco':
+          celula.classList.add('cor-branco');
+          break;
+        case 'Verde':
+          celula.classList.add('cor-verde');
+          break;
+      }
+    }
+
+    function verificar() {
+      let correto = true;
+      let preenchidoCompletamente = true;
+      
+      document.querySelectorAll("select").forEach(select => {
+        if (select.value === "") preenchidoCompletamente = false;
+      });
+      
+      if (!preenchidoCompletamente) {
+        document.getElementById("resultado").innerHTML = 
+          "⚠️ Preencha todas as células antes de verificar!";
+        document.getElementById("resultado").className = "resultado incorreto";
+        return;
+      }
+      
+      for (let bancada = 1; bancada <= 5; bancada++) {
+        const selects = document.querySelectorAll(`select[name$="-${bancada}"]`);
+        
+        selects.forEach((select, index) => {
+          if (select.value !== solucao[bancada][index]) {
+            correto = false;
+            select.style.background = "#ffcccc";
+          } else {
+            select.style.background = "#ccffcc";
+          }
+        });
+      }
+
+      document.getElementById("resultado").innerHTML = correto
+        ? "✅ Parabéns! Você completou corretamente o desafio!"
+        : "❌ Ainda há erros. Continue tentando!";
+      document.getElementById("resultado").className = correto ? "resultado correto" : "resultado incorreto";
+    }
+
+    function limpar() {
+      document.querySelectorAll("select").forEach(s => {
+        s.value = "";
+        s.style.background = "white";
+        
+        if (s.name.startsWith('cor-')) {
+          const celula = s.parentElement;
+          celula.classList.remove('cor-amarelo', 'cor-azul', 'cor-vermelho', 'cor-branco', 'cor-verde');
+        }
+      });
+      document.getElementById("resultado").innerHTML = "";
+      document.getElementById("resultado").className = "resultado";
+    }
+
+    function togglePistas() {
+      const content = document.getElementById('pistas-content');
+      const seta = document.getElementById('pistas-seta');
+      
+      content.classList.toggle('aberto');
+      seta.textContent = content.classList.contains('aberto') ? '▲' : '▼';
+    }
+
+    // Inicializar
+    document.addEventListener('DOMContentLoaded', function() {
+      criarTabela();
+    });
+  </script>
+</body>
+</html>
