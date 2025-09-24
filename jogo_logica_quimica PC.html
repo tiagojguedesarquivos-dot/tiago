@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Química IFMG Congonhas - Jogo de Lógica</title>
+  <style>
+    body { 
+      font-family: 'Segoe UI', Arial, sans-serif; 
+      margin: 20px; 
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      color: #333;
+    }
+    h1 { 
+      color: #2c3e50; 
+      text-align: center;
+      margin-bottom: 10px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    }
+    .subtitle {
+      text-align: center;
+      color: #7f8c8d;
+      margin-bottom: 20px;
+      font-style: italic;
+    }
+    table { 
+      border-collapse: collapse; 
+      margin: 20px auto; 
+      background: white;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td { 
+      border: 1px solid #ddd; 
+      padding: 10px; 
+      text-align: center; 
+    }
+    th { 
+      background: #3498db; 
+      color: white;
+      font-weight: 600;
+      position: sticky;
+      top: 0;
+    }
+    select { 
+      width: 160px; 
+      padding: 6px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: white;
+    }
+    
+    .pistas { 
+      margin: 25px auto; 
+      padding: 20px; 
+      background: white; 
+      border: 1px solid #ddd;
+      max-width: 1000px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .btn { 
+      margin: 8px; 
+      padding: 12px 24px; 
+      background: #3498db; 
+      color: white; 
+      border: none; 
+      border-radius: 6px;
+      cursor: pointer; 
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .btn:hover { 
+      background: #2980b9; 
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .btn-limpar { 
+      background: #e74c3c; 
+    }
+    .btn-limpar:hover { 
+      background: #c0392b; 
+    }
+    
+    .resultado { 
+      margin: 25px auto; 
+      padding: 20px;
+      text-align: center;
+      font-weight: bold;
+      max-width: 1000px;
+      font-size: 18px;
+      border-radius: 8px;
+    }
+    .correto { 
+      background: #d4edda; 
+      color: #155724; 
+      border: 1px solid #c3e6cb;
+    }
+    .incorreto { 
+      background: #f8d7da; 
+      color: #721c24; 
+      border: 1px solid #f5c6cb;
+    }
+    
+    .controles { 
+      text-align: center; 
+      margin: 25px; 
+    }
+    
+    .bancada-header {
+      background: #2c3e50 !important;
+      font-size: 16px;
+    }
+    
+    .pista-destaque {
+      background: #fff3cd;
+      padding: 3px 6px;
+      border-radius: 3px;
+      font-weight: bold;
+    }
+    
+    .instrucoes {
+      background: #fff9e6;
+      padding: 15px;
+      border-radius: 6px;
+      margin: 15px auto;
+      max-width: 1000px;
+      border-left: 4px solid #f1c40f;
+    }
+    
+    /* Cores para as células de cor do béquer */
+    .cor-amarelo { background-color: #FFF9C4; }
+    .cor-azul { background-color: #B3E5FC; }
+    .cor-vermelho { background-color: #FFCDD2; }
+    .cor-branco { background-color: #FAFAFA; border: 1px solid #E0E0E0; }
+    .cor-verde { background-color: #C8E6C9; }
+  </style>
+</head>
+<body>
+
+<h1>Química IFMG Congonhas</h1>
+<p class="subtitle">Jogo de Lógica - Descobrindo os Experimentos</p>
+
+<div class="instrucoes">
+  <p><strong>Instruções:</strong> Complete a tabela usando as pistas fornecidas. Cada item só pode aparecer uma vez por coluna. As células de "Cor do Béquer" serão coloridas automaticamente.</p>
+</div>
+
+<table id="tabela-jogo">
+  <!-- As linhas serão geradas pelo JavaScript -->
+</table>
+
+<div class="controles">
+  <button class="btn" onclick="verificar()">Verificar Resposta</button>
+  <button class="btn btn-limpar" onclick="limpar()">Limpar Tudo</button>
+</div>
+
+<div id="resultado" class="resultado"></div>
+
+<div class="pistas">
+  <h3>Pistas - Versão Melhorada</h3>
+  <ol>
+    <li><span class="pista-destaque">Lavoisier</span> trabalha exclusivamente na <span class="pista-destaque">bancada 3</span>.</li>
+    <li><span class="pista-destaque">Curie</span> ocupa uma das bancadas das pontas <span class="pista-destaque">(1 ou 5)</span>.</li>
+    <li><span class="pista-destaque">Franklin</span> está na ponta oposta à de Curie.</li>
+    <li>O béquer <span class="pista-destaque">azul</span> e o <span class="pista-destaque">Condensador</span> estão juntos na mesma bancada.</li>
+    <li>O <span class="pista-destaque">Condensador</span> está localizado especificamente na <span class="pista-destaque">bancada 2</span>.</li>
+    <li>O béquer <span class="pista-destaque">amarelo</span> está na bancada imediatamente anterior à do Condensador.</li>
+    <li>A experiência que mostra <span class="pista-destaque">liberação de bolhas</span> é feita com <span class="pista-destaque">HCl</span> e ocorre <span class="pista-destaque">à direita</span> da bancada que usa <span class="pista-destaque">Solução NaCl</span>.</li>
+    <li>O experimento do <span class="pista-destaque">Etanol</span> é realizado usando um <span class="pista-destaque">Agitador</span>.</li>
+    <li>O béquer <span class="pista-destaque">branco</span> pertence à bancada que utiliza <span class="pista-destaque">Espátula</span>.</li>
+    <li>A <span class="pista-destaque">Solução NaCl</span> resulta em formação de precipitado e está na bancada que usa <span class="pista-destaque">Bico Bunsen</span>.</li>
+    <li><span class="pista-destaque">Pauling</span> é o cientista que maneja a <span class="pista-destaque">Espátula</span>.</li>
+    <li>O <span class="pista-destaque">Etanol</span> é identificado pelo béquer <span class="pista-destaque">vermelho</span>.</li>
+    <li>O béquer <span class="pista-destaque">vermelho</span> está posicionado à esquerda do local onde ocorre <span class="pista-destaque">cristalização</span>.</li>
+    <li>O experimento com <span class="pista-destaque">Ácido acético</span> acontece à direita da bancada que usa <span class="pista-destaque">Agitador</span>.</li>
+    <li>A <span class="pista-destaque">Bureta</span> é utilizada na bancada vizinha à que tem o béquer <span class="pista-destaque">branco</span>.</li>
+    <li>O experimento que mostra <span class="pista-destaque">mudança de cor</span> ocorre <span class="pista-destaque">ao lado</span> do que apresenta <span class="pista-destaque">liberação de bolhas</span>.</li>
+  </ol>
+</div>
+
+<script>
+const opcoes = {
+  cientistas: ["", "Marie Curie", "Dmitri Mendeleev", "Antoine Lavoisier", "Linus Pauling", "Rosalind Franklin"],
+  descobertas: ["", "Radioatividade", "Tabela Periódica", "Lei da Conservação das Massas", "Ligações Químicas", "Estrutura do DNA"],
+  cores: ["", "Amarelo", "Azul", "Vermelho", "Branco", "Verde"],
+  aparatos: ["", "Bico Bunsen", "Condensador", "Agitador", "Espátula", "Bureta"],
+  substancias: ["", "Água destilada", "HCl", "Etanol", "Solução NaCl", "Ácido acético"],
+  resultados: ["", "Aquecimento visível", "Liberação de bolhas", "Mudança de cor", "Formação de precipitado", "Cristalização"]
+};
+
+// GABARITO CORRIGIDO: Cristalização na bancada 4 e Aquecimento visível na bancada 5
+const solucao = {
+  1: ["Marie Curie", "Radioatividade", "Amarelo", "Bico Bunsen", "Solução NaCl", "Formação de precipitado"],
+  2: ["Dmitri Mendeleev", "Tabela Periódica", "Azul", "Condensador", "HCl", "Liberação de bolhas"],
+  3: ["Antoine Lavoisier", "Lei da Conservação das Massas", "Vermelho", "Agitador", "Etanol", "Mudança de cor"],
+  4: ["Linus Pauling", "Ligações Químicas", "Branco", "Espátula", "Ácido acético", "Cristalização"],
+  5: ["Rosalind Franklin", "Estrutura do DNA", "Verde", "Bureta", "Água destilada", "Aquecimento visível"]
+};
+
+function criarTabela() {
+  const tabela = document.getElementById('tabela-jogo');
+  
+  let html = '<tr><th>Categoria</th>';
+  for (let i = 1; i <= 5; i++) {
+    html += `<th class="bancada-header">Bancada ${i}</th>`;
+  }
+  html += '</tr>';
+  
+  const categorias = [
+    { nome: 'Cientista', opcoes: opcoes.cientistas, chave: 'cientista' },
+    { nome: 'Descoberta', opcoes: opcoes.descobertas, chave: 'descoberta' },
+    { nome: 'Cor do Béquer', opcoes: opcoes.cores, chave: 'cor' },
+    { nome: 'Aparato', opcoes: opcoes.aparatos, chave: 'aparato' },
+    { nome: 'Substância', opcoes: opcoes.substancias, chave: 'substancia' },
+    { nome: 'Resultado', opcoes: opcoes.resultados, chave: 'resultado' }
+  ];
+  
+  categorias.forEach(categoria => {
+    html += `<tr><th>${categoria.nome}</th>`;
+    for (let bancada = 1; bancada <= 5; bancada++) {
+      if (categoria.chave === 'cor') {
+        // Para a linha de cor, criar um select com evento de mudança
+        html += `<td>${criarSelectComCor(`${categoria.chave}-${bancada}`, categoria.opcoes)}</td>`;
+      } else {
+        html += `<td>${criarSelect(`${categoria.chave}-${bancada}`, categoria.opcoes)}</td>`;
+      }
+    }
+    html += '</tr>';
+  });
+  
+  tabela.innerHTML = html;
+  
+  // Adicionar eventos de mudança para os selects de cor
+  adicionarEventosCor();
+}
+
+function criarSelect(nome, valores) {
+  let s = `<select name="${nome}">`;
+  for (let v of valores) {
+    s += `<option value="${v}">${v}</option>`;
+  }
+  s += `</select>`;
+  return s;
+}
+
+function criarSelectComCor(nome, valores) {
+  let s = `<select name="${nome}" onchange="atualizarCor(this)">`;
+  for (let v of valores) {
+    s += `<option value="${v}">${v}</option>`;
+  }
+  s += `</select>`;
+  return s;
+}
+
+function adicionarEventosCor() {
+  // Adicionar evento a todos os selects de cor
+  const selectsCor = document.querySelectorAll('select[name^="cor-"]');
+  selectsCor.forEach(select => {
+    select.addEventListener('change', function() {
+      atualizarCor(this);
+    });
+  });
+}
+
+function atualizarCor(selectElement) {
+  const valor = selectElement.value;
+  const celula = selectElement.parentElement;
+  
+  // Remover todas as classes de cor
+  celula.classList.remove('cor-amarelo', 'cor-azul', 'cor-vermelho', 'cor-branco', 'cor-verde');
+  
+  // Adicionar a classe correspondente à cor selecionada
+  switch(valor) {
+    case 'Amarelo':
+      celula.classList.add('cor-amarelo');
+      break;
+    case 'Azul':
+      celula.classList.add('cor-azul');
+      break;
+    case 'Vermelho':
+      celula.classList.add('cor-vermelho');
+      break;
+    case 'Branco':
+      celula.classList.add('cor-branco');
+      break;
+    case 'Verde':
+      celula.classList.add('cor-verde');
+      break;
+    default:
+      // Não fazer nada para valor vazio
+      break;
+  }
+}
+
+function verificar() {
+  let correto = true;
+  let preenchidoCompletamente = true;
+  
+  document.querySelectorAll("select").forEach(select => {
+    if (select.value === "") preenchidoCompletamente = false;
+  });
+  
+  if (!preenchidoCompletamente) {
+    document.getElementById("resultado").innerHTML = 
+      "⚠️ Preencha todas as células antes de verificar!";
+    document.getElementById("resultado").className = "resultado incorreto";
+    return;
+  }
+  
+  for (let bancada = 1; bancada <= 5; bancada++) {
+    const selects = document.querySelectorAll(`select[name$="-${bancada}"]`);
+    
+    selects.forEach((select, index) => {
+      if (select.value !== solucao[bancada][index]) {
+        correto = false;
+        select.style.background = "#ffcccc";
+      } else {
+        select.style.background = "#ccffcc";
+      }
+    });
+  }
+
+  document.getElementById("resultado").innerHTML = correto
+    ? "✅ Parabéns! Você completou corretamente o desafio!"
+    : "❌ Ainda há erros. Continue tentando!";
+  document.getElementById("resultado").className = correto ? "resultado correto" : "resultado incorreto";
+}
+
+function limpar() {
+  document.querySelectorAll("select").forEach(s => {
+    s.value = "";
+    s.style.background = "white";
+    
+    // Se for um select de cor, remover também a cor de fundo da célula
+    if (s.name.startsWith('cor-')) {
+      const celula = s.parentElement;
+      celula.classList.remove('cor-amarelo', 'cor-azul', 'cor-vermelho', 'cor-branco', 'cor-verde');
+    }
+  });
+  document.getElementById("resultado").innerHTML = "";
+  document.getElementById("resultado").className = "resultado";
+}
+
+// Inicializar
+document.addEventListener('DOMContentLoaded', function() {
+  criarTabela();
+});
+</script>
+
+</body>
+</html>
